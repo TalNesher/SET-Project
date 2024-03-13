@@ -13,7 +13,7 @@ import bguspl.set.Env;
  * @inv score >= 0
  */
 public class Player implements Runnable {
-    
+
     protected Integer flag = -1; // changing when the dealer checked my set
 
     protected BlockingQueue<Integer> myQueue;
@@ -169,14 +169,13 @@ public class Player implements Runnable {
                 int slot = rnd.nextInt(12);
                 if (!table.canChangeTable) {
                     synchronized (table.canChangeLock) {
-                        try { // dealing in the buisy wait while removingAllcardsFromTable
+                        try { // preventing busy wait while removingAllcardsFromTable
                             table.canChangeLock.wait();
                             table.canChangeLock.notify(); // chain reaction
                         } catch (Exception ex) {
                             System.out.println(Thread.currentThread().getName()
                                     + " need to be terminated. Stops waiting for can change lock");
                         }
-
                     }
                 }
                 keyPressed(slot);
