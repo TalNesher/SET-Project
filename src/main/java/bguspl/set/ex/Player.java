@@ -1,14 +1,9 @@
 package bguspl.set.ex;
-
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.logging.Level;
-
 import bguspl.set.Env;
 
 /**
@@ -95,7 +90,7 @@ public class Player implements Runnable {
     @Override
     public void run() {
         playerThread = Thread.currentThread();
-        env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
+        env.logger.info("Thread " + Thread.currentThread().getName() + " starting.");
         if (!human) {
             createArtificialIntelligence();
         }
@@ -108,7 +103,7 @@ public class Player implements Runnable {
                         myQueue.wait();
                     } catch (InterruptedException ex) {
                         System.out.println(Thread.currentThread().getName()
-                                + " i need to be terminated byyyyyyyeeeeee from waiting for myQueue not to be ampty");
+                                + " need to be terminated. Stops waiting for the queue to have room");
                         break;
                     }
                 }
@@ -116,7 +111,7 @@ public class Player implements Runnable {
                     break;
                 slot = myQueue.poll();
                 if (!human) {
-                    myQueue.notify(); // wake up the AI thread and tell him there is spce in the queue now
+                    myQueue.notify(); // wake up the AI thread and tell him there is space in the queue now
                 }
             }
             boolean wasRemoved = table.removeToken(this, slot); // check if the token nedded to be removed and removes
@@ -132,12 +127,12 @@ public class Player implements Runnable {
                                 wait();
                             } catch (InterruptedException x) {
                                 System.out.println(Thread.currentThread().getName()
-                                        + " i need to be terminated byyyyyyyeeeeee from witing for the dealer response to check my set");
+                                        + " need to be terminated. Stops waiting for the queue to have room");
                                 break;
                             }
-                        if (flag == 0) { // the set was right
+                        if (flag == 0) { // the set was wrong
                             penalty();
-                        } else if (flag == 1) { // the set was wrong
+                        } else if (flag == 1) { // the set was right
                             point();
                         }
                         flag = -1;
@@ -150,12 +145,12 @@ public class Player implements Runnable {
             try {
                 aiThread.interrupt();
                 aiThread.join();
-                System.out.println("the AI thread of player " + id + " has joined");
+                System.out.println("The AI thread of player " + id + " has joined");
             } catch (Exception ex) {
-                System.out.println("the AI thread of player " + id + "has not joined succsefuly");
+                System.out.println("The AI thread of player " + id + "has not joined succsefuly");
             }
         }
-        env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
+        env.logger.info("Thread " + Thread.currentThread().getName() + " terminated.");
     }
 
     /**
@@ -175,10 +170,10 @@ public class Player implements Runnable {
                     synchronized (table.canChangeLock) {
                         try { // dealing in the buisy wait while removingAllcardsFromTable
                             table.canChangeLock.wait();
-                            table.canChangeLock.notify();
+                            table.canChangeLock.notify(); // chain reaction
                         } catch (Exception ex) {
                             System.out.println(Thread.currentThread().getName()
-                                    + " need to be terminated byyyyyyyeeeeee from can change lock");
+                                    + " need to be terminated. Stops waiting for can change lock");
                         }
 
                     }
@@ -213,7 +208,7 @@ public class Player implements Runnable {
                             myQueue.wait();
                         } catch (InterruptedException ex1) {
                             System.out.println(Thread.currentThread().getName()
-                                    + " i need to be terminated byyyyyyyeeeeee from keyPressed-witing for the queue to have room");
+                                    + " need to be terminated. Stops waiting for the queue to have room");
                             break;
                         }
                     }
@@ -250,7 +245,6 @@ public class Player implements Runnable {
      */
     public synchronized void penalty() {
         long time = env.config.penaltyFreezeMillis;
-        System.out.println(time);
         freez(time);
         synchronized (myQueue) {
             myQueue.clear();
@@ -259,19 +253,19 @@ public class Player implements Runnable {
     }
 
     private void freez(long time) {
-        env.ui.setFreeze(id,time);
-        if(time%1000!=0)
+        env.ui.setFreeze(id, time);
+        if(time % 1000 != 0)
         {
             try {
-                Thread.currentThread().sleep(time%1000);
+                Thread.sleep(time % 1000);
             } catch (InterruptedException ex) {
             }
-            time=time-(time%1000);
+            time = time - (time % 1000);
         }
-        while (time >0) {
-            env.ui.setFreeze(id,time-1);
+        while (time > 0) {
+            env.ui.setFreeze(id, time - 1);
             try {
-                Thread.currentThread().sleep(1000);
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 break;
             }
