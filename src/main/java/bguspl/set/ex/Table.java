@@ -90,11 +90,13 @@ public class Table {
      */
     public synchronized int countCards() {
         int cards = 0;
+
         stcRWLock.readLock().lock();
         for (Integer card : slotToCard)
             if (card != null)
                 ++cards;
         stcRWLock.readLock().unlock();
+        
         return cards;
     }
 
@@ -121,7 +123,6 @@ public class Table {
 
         emptySlots.remove(emptySlots.indexOf(slot)); // doesnt need to be synch because only the dealer is changing the
                                                      // list
-
         env.ui.placeCard(card, slot);
     }
 
@@ -189,8 +190,8 @@ public class Table {
 
     public Integer slotToCard(int slot) {
         stcRWLock.readLock().lock();
-        Integer x = slotToCard[slot];
+        Integer card = slotToCard[slot];
         stcRWLock.readLock().unlock();
-        return x;
+        return card;
     }
 }
