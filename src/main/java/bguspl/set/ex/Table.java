@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * @inv slotToCard[x] == y iff cardToSlot[y] == x
  */
 public class Table {
+    
     protected volatile boolean canChangeTable = false; // doesnt need to be atomic or sinchronized becouse only the
                                                        // dealer can change this argument, but we want that every time
                                                        // it changes everyone will know imidiatly
@@ -96,7 +97,7 @@ public class Table {
             if (card != null)
                 ++cards;
         stcRWLock.readLock().unlock();
-        
+
         return cards;
     }
 

@@ -13,6 +13,7 @@ import bguspl.set.Env;
  * @inv score >= 0
  */
 public class Player implements Runnable {
+    
     protected Integer flag = -1; // changing when the dealer checked my set
 
     protected BlockingQueue<Integer> myQueue;

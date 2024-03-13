@@ -1,9 +1,7 @@
 package bguspl.set;
-
 import bguspl.set.ex.Dealer;
 import bguspl.set.ex.Player;
 import bguspl.set.ex.Table;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -24,7 +22,7 @@ public class Main {
     private static Logger logger;
 
     public static void xButtonPressed() throws InterruptedException {
-        if (logger != null) logger.severe("exit button pressed");
+        if (logger != null) logger.severe("Exit button pressed");
         xButtonPressed = true;
         if (dealer != null) dealer.terminate();
         mainThread.join();
@@ -38,13 +36,12 @@ public class Main {
     public static void main(String[] args) {
 
         mainThread = Thread.currentThread();
-
+        
         // create the game environment objects
         logger = initLogger();
         ThreadLogger.logStart(logger, Thread.currentThread().getName());
         Config config = new Config(logger, "config.properties");
         Util util = new UtilImpl(config);
-
         Player[] players = new Player[config.players];
         UserInterface ui = null;
         try {
@@ -56,7 +53,6 @@ public class Main {
                 logger.severe("warning: running with human players with no user interface");
         }
         ui = new UserInterfaceDecorator(logger, util, ui);
-
         Env env = new Env(logger, config, ui, util);
 
         // create the game entities

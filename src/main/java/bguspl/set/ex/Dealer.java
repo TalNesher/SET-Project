@@ -1,18 +1,13 @@
 package bguspl.set.ex;
-
 import bguspl.set.Env;
-
-import java.rmi.server.ObjID;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.Vector;
 import java.util.concurrent.Semaphore;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -68,7 +63,7 @@ public class Dealer implements Runnable {
      */
     @Override
     public void run() {
-        env.logger.info("thread " + Thread.currentThread().getName() + " starting.");
+        env.logger.info("Thread " + Thread.currentThread().getName() + " starting.");
         placeCardsOnTable();
         for (int i = 0; i < players.length; i++) {
             playersThreads[i] = new Thread(players[i], env.config.playerNames[i]);
@@ -79,11 +74,11 @@ public class Dealer implements Runnable {
             updateTimerDisplay(true); // set back to 60 sec
             removeAllCardsFromTable(true);
         }
-        System.out.println("the dealer decide the game should be finished");
+        System.out.println("The dealer decide the game should be finished");
         terminate();
         System.out.println(Thread.currentThread().getName() + " lets announce the winners");
         announceWinners();
-        env.logger.info("thread " + Thread.currentThread().getName() + " terminated.");
+        env.logger.info("Thread " + Thread.currentThread().getName() + " terminated.");
     }
 
     /**
@@ -115,7 +110,7 @@ public class Dealer implements Runnable {
                                            // set
             try {
                 playersThreads[i].join();
-                System.out.println("player " + i + " thread has joined");
+                System.out.println("Player " + i + " thread has joined");
             } catch (InterruptedException e) {
             }
         }
@@ -265,7 +260,6 @@ public class Dealer implements Runnable {
         // after the AI will put 3 slots in the queue of each player, it will wait so
         // wont waste CPU time
         table.canChangeTable = false; // stoping the AI threads and the option to place tokens
-
         for (int i = 0; i < 12; i++) {
             if (table.slotToCard(i) != null) {
                 deck.add(table.slotToCard(i));
@@ -307,7 +301,6 @@ public class Dealer implements Runnable {
 
         removeAllCardsFromTable(false);
         env.ui.announceWinner(winnersPlayersID);
-        System.out.println("not dinidh yet?");
     }
 
     public long getSleepTime() {
@@ -317,5 +310,4 @@ public class Dealer implements Runnable {
     public void setSleepTime(long x) {
         this.sleepTime = x;
     }
-
 }
